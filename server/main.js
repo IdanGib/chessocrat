@@ -43,6 +43,15 @@ function calcMove(players) {
   return win && JSON.parse(win);
 }
 
+function isPromotionMove({ move }) {
+  const { to } = move;
+  return to.endsWith('1') || to.endsWith('8');
+}
+
+function calcSelectedPromotion(players) {
+  return null;
+}
+
 async function gameState(room) {
   const chess = games[room];
   if(!chess) {
@@ -57,10 +66,13 @@ async function gameState(room) {
     }
   }
 
-  const move = calcMove(players.filter(p => p.side === turn));
-
+  const currentPlayers = players.filter(p => p.side === turn);
+  const move = calcMove(currentPlayers);
+  const selectedPromotion = calcSelectedPromotion(currentPlayers);
+  let promotion = false;
   if(move) {
-    chess.move(move);
+    promotion = isPromotionMove({ turn, move });
+    chess.move(move, { promotion: selectedPromotion });
   }
 
   const rooms = GameNS.adapter.rooms;
@@ -79,7 +91,8 @@ async function gameState(room) {
     check: chess.in_check(),
     fen: chess.fen(),
     size: current?.size || 0,
-    players
+    players,
+    promotion
   };
 }
 

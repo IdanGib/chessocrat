@@ -43,10 +43,10 @@
                 title: "Choose piece",
                 body: `
                     <div class="text-center">
-                        <img data-piece="q" style="width:64px;height:64px;" src="chesspieces/wQ.png">
-                        <img data-piece="r" style="width:64px;height:64px;" src="chesspieces/wR.png">
-                        <img data-piece="n" style="width:64px;height:64px;" src="chesspieces/wN.png">
-                        <img data-piece="b" style="width:64px;height:64px;" src="chesspieces/wB.png">
+                        <img class="btn" data-piece="q" style="width:64px;height:64px;" src="chesspieces/wQ.png">
+                        <img class="btn" data-piece="r" style="width:64px;height:64px;" src="chesspieces/wR.png">
+                        <img class="btn" data-piece="n" style="width:64px;height:64px;" src="chesspieces/wN.png">
+                        <img class="btn" data-piece="b" style="width:64px;height:64px;" src="chesspieces/wB.png">
                     </div>
                 `
             });
@@ -138,7 +138,7 @@
         return chess.orientation() === 'white' ? 'w' : 'b';
     }
 
-    socket.on('state', ({ 
+    socket.on('state', async ({ 
         players,
         turn, 
         over,
@@ -194,7 +194,8 @@
         }
 
         if(promotion) {
-            openPromotionModal();
+           const promotion = await openPromotionModal();
+           socket.on('vote', { ...me.vote, promotion  })
         }
     
     });
