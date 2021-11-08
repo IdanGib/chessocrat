@@ -1,10 +1,11 @@
 {
-  "name": "lidorchess",
+  "name": "chessocrat",
   "version": "1.0.0",
   "description": "",
-  "main": "/server/main.js",
+  "main": "server/main.js",
   "scripts": {
-    "start": "nodemon ./server/main.js",
+    "dev": "nodemon .",
+    "start": "node .",
     "ngrok": "ngrok http http://localhost:3000"
   },
   "keywords": [],
