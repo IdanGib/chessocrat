@@ -1,0 +1,61 @@
+:root {
+    --color-white-square: #f0d9b5;
+    --color-black-square: #b58863;
+    --color-dark: #404040;
+    --color-selected: goldenrod;
+}
+
+#board {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+
+#w_turn,
+#b_turn {
+    display: none;
+}
+
+.w #w_turn {
+    display: inline-block;
+} 
+.b #b_turn {
+    display: inline-block;
+}
+
+.w #b_turn {
+    display: none;
+}
+.b #w_turn {
+    display: none;
+} 
+
+
+#board .selected {
+    background-color: var(--color-selected);
+}
+
+.white-vote, .black-vote {
+    border-radius: 4px;
+    font-size: 18px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.white-vote {
+    background-color: white;
+    color: black;
+ 
+}
+.black-vote {
+    background-color: black;
+    color: white;
+}
+
+.game-container {
+    max-width: 600px;
+}

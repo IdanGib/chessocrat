@@ -1,0 +1,33 @@
+:root {
+
+}
+
+.box {
+    width: 400px;
+    height: 400px;
+    background-color: gray;
+}
+
+.width {
+    max-width: 600px;
+}
+
+.game-card {
+    height: 50px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    padding: 8px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.games {
+    margin-top: 72px;
+}
