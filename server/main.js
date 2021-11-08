@@ -9,7 +9,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const { resolve } = require('path');
 const io = new Server(server);
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 const ROOM_SPACE = "/games";
 const games = {};
 app.use(cors());
