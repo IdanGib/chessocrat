@@ -15,7 +15,7 @@ const games = {};
 app.use(cors());
 app.use(express.static(resolve(__dirname, '..', 'client')))
 
-const PROMOTION_FEN = "rnbqkbnr/pPppppp1/8/8/8/8/1PPPPPpP/RNBQKBNR w KQkq - 0 5";
+//const PROMOTION_FEN = "rnbqkbnr/pPppppp1/8/8/8/8/1PPPPPpP/RNBQKBNR w KQkq - 0 5";
 
 const GameNS = io.of(ROOM_SPACE);
 
@@ -184,7 +184,7 @@ function joinUser(socket) {
 }
 
 GameNS.adapter.on("create-room", room => {
-  const chess = new Chess(PROMOTION_FEN);
+  const chess = new Chess();
   games[room] = chess;
   io.emit('rooms', getRooms());
 });
