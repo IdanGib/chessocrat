@@ -51,13 +51,24 @@ function isPromotionMove({ move }) {
 function calcSelectedPromotion(players) {
   return null;
 }
-
+function cleanMoves(players) {
+    for(const p of players) {
+      p.vote.move = null;
+    }
+}
+function cleanPromotions(players) {
+  for(const p of players) {
+    p.vote.promotion = null;
+  }
+}
 async function gameState(room) {
   const chess = games[room];
   if(!chess) {
     return {};
   }
+
   const sockets = await GameNS.in(room).fetchSockets();
+  const size = sockets.length;
   const players = [];
   const turn = chess.turn();
   for(const s of sockets) {
@@ -67,16 +78,19 @@ async function gameState(room) {
   }
 
   const currentPlayers = players.filter(p => p.side === turn);
+  const prevPlayers = players.filter(p => p.side !== turn);
+
   const move = calcMove(currentPlayers);
+  cleanMoves(prevPlayers);
   const selectedPromotion = calcSelectedPromotion(currentPlayers);
+  cleanPromotions(prevPlayers);
+
   let promotion = false;
+
   if(move) {
     promotion = isPromotionMove({ turn, move });
     chess.move(move, { promotion: selectedPromotion });
   }
-
-  const rooms = GameNS.adapter.rooms;
-  const current = rooms.get(room);
 
   const over = chess.game_over() ? (
     chess.in_stalemate() && "stalemate" ||
@@ -90,7 +104,7 @@ async function gameState(room) {
     over,
     check: chess.in_check(),
     fen: chess.fen(),
-    size: current?.size || 0,
+    size,
     players,
     promotion
   };

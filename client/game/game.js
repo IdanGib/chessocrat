@@ -56,6 +56,8 @@
 
     const gameEl = $('#game');
     gameEl.html(game);
+    
+    const votes_info = $('#votes_info');
 
     const ROOM_SPACE = "/games";
     const socket = io(ROOM_SPACE);
@@ -150,11 +152,14 @@
         const me = players.find(p => p.id === socket.id);
 
         if(!me) {
-            return console.log('error no me', players, socket.id);
+            return;
         }
-
-        
-
+        const orientation = (me.side === 'w') ? 'white' : 'black';
+        if(orientation !== chess.orientation()) {
+            chess.orientation(orientation);
+        }
+        const mygroup = players.filter(p => p.side === getSide() );
+        const isMyTurn = me.side === turn;
         const { from: mfrom, to: mto } = me.vote.move || {};
         if(mfrom && mto) {
             const myvote = `
@@ -166,7 +171,13 @@
             `;
             msgEl.html(myvote);
         }
-        const moveVotes = players.filter(p => p.side === getSide() ).filter(p => Boolean(p.vote.move));
+        
+        const moveVotes = mygroup.filter(p => Boolean(p.vote.move));
+        
+        const ratio = moveVotes.length / mygroup.length;
+        const votesInfoMsge = `Votes ${Math.round(ratio * 100)}%`;
+        votes_info.text(votesInfoMsge);
+
         const vhtml = moveVotes.map(
             pl =>  `<div class="text-center" style="font-size: 1.6rem;">
                       <span>${pl.vote.move.from}</span>
@@ -179,10 +190,7 @@
         turnEl.attr('class', '');
         turnEl.addClass(turn);
 
-        const orientation = (me.side === 'w') ? 'white' : 'black';
-        if(orientation !== chess.orientation()) {
-            chess.orientation(orientation);
-        }
+    
 
         sizeEl.text(size);
 
