@@ -3,6 +3,7 @@
     --color-black-square: #b58863;
     --color-dark: #404040;
     --color-selected: goldenrod;
+    --b-radius: 6px;
 }
 
 #board {
@@ -37,7 +38,7 @@
 }
 
 .white-vote, .black-vote {
-    border-radius: 4px;
+    border-radius: var(--b-radius);
     font-size: 18px;
     width: 40px;
     height: 40px;
@@ -58,4 +59,13 @@
 
 .game-container {
     max-width: 600px;
+}
+
+.promotion-piece {
+    cursor: pointer;
+    transition: all 0.21s;
+    border-radius: var(--b-radius);
+}
+.promotion-piece:hover {
+    background-color: var(--color-selected);
 }

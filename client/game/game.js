@@ -28,8 +28,6 @@
         });
     }
 
-   
-
     function openPromotionModal() {
         return new Promise(resolve => {
             modal.open({
@@ -43,10 +41,10 @@
                 title: "Choose piece",
                 body: `
                     <div class="text-center">
-                        <img class="btn" data-piece="q" style="width:64px;height:64px;" src="chesspieces/wQ.png">
-                        <img class="btn" data-piece="r" style="width:64px;height:64px;" src="chesspieces/wR.png">
-                        <img class="btn" data-piece="n" style="width:64px;height:64px;" src="chesspieces/wN.png">
-                        <img class="btn" data-piece="b" style="width:64px;height:64px;" src="chesspieces/wB.png">
+                        <img class="mx-2 p-1 promotion-piece" data-piece="q" style="width:64px;height:64px;" src="chesspieces/wQ.png">
+                        <img class="mx-2 p-1 promotion-piece" data-piece="r" style="width:64px;height:64px;" src="chesspieces/wR.png">
+                        <img class="mx-2 p-1 promotion-piece" data-piece="n" style="width:64px;height:64px;" src="chesspieces/wN.png">
+                        <img class="mx-2 p-1 promotion-piece" data-piece="b" style="width:64px;height:64px;" src="chesspieces/wB.png">
                     </div>
                 `
             });
@@ -95,7 +93,6 @@
         event.preventDefault();
         voteMove();
     });
-
 
     function getSquareFromElement(el) {
         if(!el) {
@@ -203,7 +200,7 @@
 
         if(promotion) {
            const promotion = await openPromotionModal();
-           socket.on('vote', { ...me.vote, promotion  })
+           socket.emit('vote', { ...me.vote, promotion  })
         }
     
     });
