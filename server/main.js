@@ -15,6 +15,8 @@ const games = {};
 app.use(cors());
 app.use(express.static(resolve(__dirname, '..', 'client')))
 
+const PROMOTION_FEN = "rnbqkbnr/pPppppp1/8/8/8/8/1PPPPPpP/RNBQKBNR w KQkq - 0 5";
+
 const GameNS = io.of(ROOM_SPACE);
 
 function calcMove(players) {
@@ -49,7 +51,28 @@ function isPromotionMove({ move }) {
 }
 
 function calcSelectedPromotion(players) {
-  return null;
+  const votes = players.map(p => p.vote.promotion);
+  const votesCount = {};
+  for(const p of votes) {
+    if(p) {
+      votesCount[p] ? 
+          votesCount[p] ++ : 
+          votesCount[p] = 1; 
+    } else {
+      return null;
+    }
+  }
+ 
+  let win;
+  for(const k in votesCount) {
+    if(!win) {
+      win = k;
+    } else if(votesCount[win] < votesCount[k]) {
+      win = k;
+    }
+  }
+  
+  return win;
 }
 function cleanMoves(players) {
     for(const p of players) {
@@ -86,10 +109,12 @@ async function gameState(room) {
   cleanPromotions(prevPlayers);
 
   let promotion = false;
-
+  
   if(move) {
-    promotion = isPromotionMove({ turn, move });
-    chess.move(move, { promotion: selectedPromotion });
+    if(!selectedPromotion) {
+      promotion = isPromotionMove({ turn, move });
+    }
+    chess.move({ ...move, promotion: selectedPromotion });
   }
 
   const over = chess.game_over() ? (
@@ -147,7 +172,7 @@ function joinUser(socket) {
 }
 
 GameNS.adapter.on("create-room", room => {
-  const chess = new Chess();
+  const chess = new Chess(PROMOTION_FEN);
   games[room] = chess;
   io.emit('rooms', getRooms());
 });

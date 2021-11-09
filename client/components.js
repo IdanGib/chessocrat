@@ -34,8 +34,8 @@ class AppToast {
 }
 
 class AppModal {
-    moadl = $(`
-    <div>
+    modal = $(`
+    <div id="m-container">
         <button 
             id="modal_trigger" 
             type="button" 
@@ -51,7 +51,7 @@ class AppModal {
                     id="appModalLabel">
                 <span id="modal_title"></span>
                 </h5>
-                <button type="button" 
+                <button type="button"
                     class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
                 <div id="modal_body" class="modal-body">
@@ -63,9 +63,14 @@ class AppModal {
         </div>
     `);
     constructor(id) {
-        $('#' + id).append(this.moadl);
+        $('#' + id).append(this.modal);
         
     }
+
+    close() {
+        // TODO 
+    }
+
     open({
         title,
         body,

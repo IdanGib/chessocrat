@@ -35,6 +35,7 @@
                     name: 'click',
                     handler: event => {
                         const { piece }  = event.target.dataset;
+                        modal.close();
                         resolve(piece);
                     }
                 },
@@ -108,6 +109,11 @@
         }
     }
 
+    function cleanAllSelectedSquares() {
+        $('.selected').removeClass('selected');
+        while(selected.pop());
+    }
+
     board.on('click', event => {
         const { square, element } = getSquareFromElement(event.target);
         if(!square || !element) {
@@ -117,18 +123,13 @@
         if(selected.length < 2 && !selected.includes(square)) {
             selected.push(square);
         } else {
-            $('.selected').removeClass('selected');
-            while(selected.pop());
+           cleanAllSelectedSquares();
         }
 
         mymove.html(selected.map(s => `<div class="${chess.orientation()}-vote">${s}</div>`)
         .join(`<i class="bi bi-arrow-right mx-2" style="font-size: 1.6rem;"></i>`));
     });
     
-    function gameOver(over) {
-        alert(over);
-    }
-
     function chessMessage(in_check) {
         pillMsgEl.html(in_check ? messages.check : '' );
     }
@@ -172,6 +173,9 @@
         const moveVotes = mygroup.filter(p => Boolean(p.vote.move));
         
         const ratio = moveVotes.length / mygroup.length;
+        if(!ratio) {
+            cleanAllSelectedSquares();
+        }
         const votesInfoMsge = `Votes ${Math.round(ratio * 100)}%`;
         votes_info.text(votesInfoMsge);
 
@@ -186,9 +190,6 @@
         votesEl.html(vhtml);
         turnEl.attr('class', '');
         turnEl.addClass(turn);
-
-    
-
         sizeEl.text(size);
 
         chessMessage(check);
@@ -198,11 +199,13 @@
             openGameOverModal(over, turn);
         }
 
-        if(promotion) {
+        if(promotion && isMyTurn) {
            const promotion = await openPromotionModal();
+
            socket.emit('vote', { ...me.vote, promotion  })
         }
-    
+        console.log('fen', fen);
+        console.log({ promotion });
     });
     socket.emit('join', game);
 })();
