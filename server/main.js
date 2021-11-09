@@ -46,8 +46,20 @@ function calcMove(players) {
 }
 
 function isPromotionMove({ move }) {
-  const { to } = move;
-  return to.endsWith('1') || to.endsWith('8');
+  const { from, to } = move || {};
+  if(!from || !to) {
+    return false;
+  }
+  const piece = chess.get(from);
+  if(!piece) {
+    return false;
+  }
+  const { type, color } = piece || {};
+  if(type !== chess.PAWN) {
+    return false;
+  }
+  return  color === chess.WHITE && to.endsWith('1') || 
+          color === chess.BLACK && to.endsWith('8');
 }
 
 function calcSelectedPromotion(players) {

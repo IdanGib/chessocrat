@@ -34,8 +34,34 @@ class AppToast {
 }
 
 class AppModal {
+    staticModal = `
+    <button    
+        id="static_modal_trigger" 
+        type="button" 
+        class="visually-hidden" 
+        data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+      Launch static backdrop modal
+    </button>
+
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" 
+        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel"></h5>
+            <button type="button" id="close_static_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div id="static_modal_body" class="modal-body"></div>
+        </div>
+      </div>
+    </div>
+    
+    `
+
+
+
     modal = $(`
-    <div id="m-container">
+    <div>
         <button 
             id="modal_trigger" 
             type="button" 
@@ -52,7 +78,9 @@ class AppModal {
                 <span id="modal_title"></span>
                 </h5>
                 <button type="button"
-                    class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    class="btn-close" 
+                    id="close_modal"
+                    data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
                 <div id="modal_body" class="modal-body">
                     
@@ -64,11 +92,16 @@ class AppModal {
     `);
     constructor(id) {
         $('#' + id).append(this.modal);
+        $('#' + id).append(this.staticModal);
         
     }
 
+    closeStatic() {
+        $('#close_static_modal').click();
+    }
+
     close() {
-        // TODO 
+        $('#close_modal').click();
     }
 
     open({
@@ -78,11 +111,29 @@ class AppModal {
     }) {
         $('#modal_trigger').click();
         const { name, handler } = listener || {};
+        const b = $('#modal_body');
         if(name && handler) {
-            $('#appModal').on(name, handler);
+            b.on(name, handler);
         }
         $('#modal_title').html(title || '');
-        $('#modal_body').html(body|| '');
+        b.html(body|| '');
       
     }
+
+    openStatic({
+        title,
+        body,
+        listener
+    }) {
+        $('#static_modal_trigger').click();
+        const b = $('#static_modal_body');
+        const { name, handler } = listener || {};
+        if(name && handler) {
+            b.on(name, handler);
+        }
+        $('#staticBackdropLabel').html(title || '');
+        b.html(body|| '');
+      
+    }
+
 }

@@ -30,12 +30,12 @@
 
     function openPromotionModal() {
         return new Promise(resolve => {
-            modal.open({
+            modal.openStatic({
                 listener: {
                     name: 'click',
                     handler: event => {
                         const { piece }  = event.target.dataset;
-                        modal.close();
+                        modal.closeStatic();
                         resolve(piece);
                     }
                 },
@@ -201,10 +201,8 @@
 
         if(promotion && isMyTurn) {
            const promotion = await openPromotionModal();
-
            socket.emit('vote', { ...me.vote, promotion  })
         }
-        console.log('fen', fen);
         console.log({ promotion });
     });
     socket.emit('join', game);
