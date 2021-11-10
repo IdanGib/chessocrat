@@ -152,16 +152,11 @@
         const { from: mfrom, to: mto } = me.vote.move || {};
         if(mfrom && mto) {
             const myvote = `
-        
-            <div class="rounded-3 bg-success text-light px-2 d-inline-block" style="font-size: 1.6rem;">
+            <div class="rounded-3 bg-success text-light px-2 d-inline-block" style="font-size: 1rem;">
                 <span>${mfrom}</span>
-                <i class="bi bi-arrow-right mx-2"></i>
+                <i class="bi bi-arrow-right"></i>
                 <span>${mto}</span>
-          
             </div>
-            <div class="rounded-3 bg-success px-2 text-light mx-2 d-inline-block" style="font-size: 1.6rem;">
-            <i class="bi bi-check2"></i>
-        </div>
             `;
             votedEl.html(myvote);
         }
