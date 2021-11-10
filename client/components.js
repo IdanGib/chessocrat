@@ -14,19 +14,21 @@ class AppToast {
     </div>
     `);
     constructor(id) {
-        if(id) {
-            this.toast.on('click', event => {
-                const action = event.target.dataset;
-                if(action === 'close') {
-                    this.toast.hide();
-                }
-            });
-    
-            $('#' + id).append(this.toast);
-        }
+        this.toast.on('click', event => {
+            const action = event.target.dataset;
+            if(action === 'close') {
+                this.toast.hide();
+            }
+        });
+        const host = id ? $('#' + id) : $('body');
+        host.append(this.toast);
+
     }
-    open() {
+    open(timeout) {
         this.toast.show();
+        if(timeout) {
+            setTimeout(this.toast.hide, timeout);
+        }
     }
     close() {
         this.toast.hide();
@@ -91,8 +93,10 @@ class AppModal {
         </div>
     `);
     constructor(id) {
-        $('#' + id).append(this.modal);
-        $('#' + id).append(this.staticModal);
+        const host = id ? $('#' + id) : $('body');
+        
+        host.append(this.modal);
+        host.append(this.staticModal);
         
     }
 

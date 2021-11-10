@@ -27,18 +27,22 @@
       </div>
     </div>
 
-         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+         <div class="offcanvas offcanvas-end" tabindex="-1" 
+          id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
             <div class="offcanvas-header">
                 <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Votes</h5>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                <button type="button" class="btn-close text-reset" 
+                data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-            <div id="votes_container" class="offcanvas-body">
+            <hr class="m-0">
+            <div id="votes_container" class="offcanvas-body mt-4">
           
             </div>
         </div>
 
 
   </nav>
+   
     <div class="container-fluid position-relative">
             <div class="container m-auto rows game-container">
                 <div class="my-2 row">
@@ -71,9 +75,9 @@
                 </div>
                 <div id="board" class="m-auto my-2"></div>
                 <form id="move" 
-                    class="d-flex align-items-center justify-content-between">
-                   <div id="mymove" class="d-flex align-items-center justify-content-center"></div>
-                
+                    class="d-flex align-items-center position-relative justify-content-between">
+                    <div id="mymove" class="d-flex align-items-center justify-content-center"></div>
+                    <div id="voted" class="d-flex justify-content-center align-items-center w-100 position-absolute left-0 right-0 mx-auto"></div>
                     <div class="text-center">
                       <button class="btn btn-success" data-action="vote">
                         <i class="bi bi-check-circle-fill me-1"></i>    

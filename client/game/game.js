@@ -15,7 +15,15 @@
         return err.html(messages.err);
     }
 
-    const modal = new AppModal('modal');
+  
+    const modal = new AppModal();
+
+    modal.open({ 
+        title: 'Welcome!', 
+        body: 'Please act in respectful manners and have fun!'
+    });
+
+   
 
     function openGameOverModal(over, turn) {
         modal.open({
@@ -72,7 +80,9 @@
     const move = $('#move');
     const turnEl = $('#turn');
     const mymove = $('#mymove');
-    const votesEl = $('#votes_container');
+    const votesContainerEl = $('#votes_container');
+    const votedEl = $('#voted');
+
     const selected = [];
 
     function voteMove() {
@@ -130,12 +140,69 @@
         .join(`<i class="bi bi-arrow-right mx-2" style="font-size: 1.6rem;"></i>`));
     });
     
-    function chessMessage(in_check) {
+    function checkMessage(in_check) {
         pillMsgEl.html(in_check ? messages.check : '' );
     }
 
     function getSide() {
         return chess.orientation() === 'white' ? 'w' : 'b';
+    }
+
+    function updateVotedView(me) {
+        const { from: mfrom, to: mto } = me.vote.move || {};
+        if(mfrom && mto) {
+            const myvote = `
+        
+            <div class="rounded-3 bg-success text-light px-2 d-inline-block" style="font-size: 1.6rem;">
+                <span>${mfrom}</span>
+                <i class="bi bi-arrow-right mx-2"></i>
+                <span>${mto}</span>
+          
+            </div>
+            <div class="rounded-3 bg-success px-2 text-light mx-2 d-inline-block" style="font-size: 1.6rem;">
+            <i class="bi bi-check2"></i>
+        </div>
+            `;
+            votedEl.html(myvote);
+        }
+    }
+
+    function getVotesCount(moveVotes) {
+        const results = {};
+     
+        for(const mv of moveVotes) {
+            const { from, to } = mv.vote.move;
+            if(!from || !to) {
+                continue;
+            }
+            const r = `${from}${to}`;
+            if(results[r]) {
+                results[r].count++;
+            } else {
+                results[r] = { from, to, count: 1 };
+            }
+        }
+      
+        return Object.values(results).sort((v1, v2) => v2.count - v1.count);
+    }
+
+    function updateVotesContainer(moveVotes) {
+        const votesCount = getVotesCount(moveVotes);
+        const vhtml = votesCount.map(
+            v =>  `<div class="text-start bg-light py-2 px-4 m-1 rounded-3" style="font-size: 1.3rem;">
+                      <span>${v.from}</span>
+                      <i class="bi bi-arrow-right mx-2"></i>
+                      <span>${v.to}</span>
+                      <span class="ms-4">${v.count}</span>
+                  </div>`
+          ).join('');
+         
+        votesContainerEl.html(vhtml);
+    }
+
+    function updateVotesRatio(ratio) {
+        const votesInfoMsge = `Votes ${Math.round(ratio * 100)}%`;
+        votes_info.text(votesInfoMsge);
     }
 
     socket.on('state', async ({ 
@@ -156,43 +223,23 @@
         if(orientation !== chess.orientation()) {
             chess.orientation(orientation);
         }
+
         const mygroup = players.filter(p => p.side === getSide() );
-        const isMyTurn = me.side === turn;
-        const { from: mfrom, to: mto } = me.vote.move || {};
-        if(mfrom && mto) {
-            const myvote = `
-            <div class="rounded-3 bg-light" style="font-size: 1.6rem;">
-                <span>${mfrom}</span>
-                <i class="bi bi-arrow-right mx-2"></i>
-                <span>${mto}</span>
-            <div>
-            `;
-            msgEl.html(myvote);
-        }
-        
         const moveVotes = mygroup.filter(p => Boolean(p.vote.move));
-        
+        const isMyTurn = me.side === turn;
+
+        updateVotedView(me);
         const ratio = moveVotes.length / mygroup.length;
         if(!ratio) {
             cleanAllSelectedSquares();
         }
-        const votesInfoMsge = `Votes ${Math.round(ratio * 100)}%`;
-        votes_info.text(votesInfoMsge);
+        updateVotesRatio(ratio);
+        updateVotesContainer(moveVotes);
 
-        const vhtml = moveVotes.map(
-            pl =>  `<div class="text-center" style="font-size: 1.6rem;">
-                      <span>${pl.vote.move.from}</span>
-                      <i class="bi bi-arrow-right mx-2"></i>
-                      <span>${pl.vote.move.to}</span>
-                  </div>`
-          ).join('');
-         
-        votesEl.html(vhtml);
         turnEl.attr('class', '');
         turnEl.addClass(turn);
         sizeEl.text(size);
-
-        chessMessage(check);
+        checkMessage(check);
         chess.position(fen);
 
         if(over) {
@@ -203,7 +250,6 @@
            const promotion = await openPromotionModal();
            socket.emit('vote', { ...me.vote, promotion  })
         }
-        console.log({ promotion });
     });
     socket.emit('join', game);
 })();
