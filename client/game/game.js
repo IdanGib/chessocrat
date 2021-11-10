@@ -76,12 +76,10 @@
     const sizeEl = $('#size');
     const board = $('#board');
     const pillMsgEl = $('#pill-msg');
-    const msgEl = $('#msg');
     const move = $('#move');
     const turnEl = $('#turn');
     const mymove = $('#mymove');
     const votesContainerEl = $('#votes_container');
-    const votedEl = $('#voted');
 
     const selected = [];
 
@@ -148,19 +146,7 @@
         return chess.orientation() === 'white' ? 'w' : 'b';
     }
 
-    function updateVotedView(me) {
-        const { from: mfrom, to: mto } = me.vote.move || {};
-        if(mfrom && mto) {
-            const myvote = `
-            <div class="rounded-3 bg-success text-light px-2 d-inline-block" style="font-size: 1rem;">
-                <span>${mfrom}</span>
-                <i class="bi bi-arrow-right"></i>
-                <span>${mto}</span>
-            </div>
-            `;
-            votedEl.html(myvote);
-        }
-    }
+ 
 
     function getVotesCount(moveVotes) {
         const results = {};
@@ -184,12 +170,16 @@
     function updateVotesContainer(moveVotes) {
         const votesCount = getVotesCount(moveVotes);
         const vhtml = votesCount.map(
-            v =>  `<div class="text-start bg-light py-2 px-4 m-1 rounded-3" style="font-size: 1.3rem;">
-                      <span>${v.from}</span>
-                      <i class="bi bi-arrow-right mx-2"></i>
-                      <span>${v.to}</span>
-                      <span class="ms-4">${v.count}</span>
-                  </div>`
+            v =>  `<tr>
+                <td class="text-center">
+                    <span>${v.from}</span>
+                    <i class="bi bi-arrow-right mx-2"></i>
+                    <span>${v.to}</span> 
+                </td>
+                <td class="text-center">
+                    ${v.count}
+                </td>
+            </tr>`
           ).join('');
          
         votesContainerEl.html(vhtml);
@@ -223,7 +213,6 @@
         const moveVotes = mygroup.filter(p => Boolean(p.vote.move));
         const isMyTurn = me.side === turn;
 
-        updateVotedView(me);
         const ratio = moveVotes.length / mygroup.length;
         if(!ratio) {
             cleanAllSelectedSquares();

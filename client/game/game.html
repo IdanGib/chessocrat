@@ -35,8 +35,16 @@
                 data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <hr class="m-0">
-            <div id="votes_container" class="offcanvas-body mt-4">
-          
+            <div class="table-responsive">
+              <table class="table text-center">
+                  <thead>
+                    <tr>
+                      <th scope="col">Move</th>
+                      <th scope="col">Vote</th>
+                    </tr>
+                  </thead>
+                   <tbody id="votes_container"></tbody>
+              </table>
             </div>
         </div>
 
@@ -79,9 +87,9 @@
                     <div id="mymove" class="d-flex align-items-center justify-content-center"></div>
                     <div id="voted" class="d-flex justify-content-center align-items-center w-100 position-absolute left-0 right-0 mx-auto"></div>
                     <div class="text-center">
-                      <button class="btn btn-success" data-action="vote">
-                        <i class="bi bi-check-circle-fill me-1"></i>    
-                        <span>Vote</span>  
+                      <button class="btn btn-success"  data-action="vote">
+                        <i style="pointer-events:none;" class="bi bi-check-circle-fill me-1"></i>    
+                        <span style="pointer-events:none;">Vote</span>  
                     </button>
                     </div>
                 
