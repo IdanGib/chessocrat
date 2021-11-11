@@ -46,16 +46,11 @@ function calcMove(players) {
 }
 
 function isPromotionMove(move, chess) {
-  console.log('isPromotionMove', move);
   const { from, to } = move || {};
   if(!from || !to) {
     return false;
   }
-  console.log('from:', from);
-
   const piece = chess.get(from);
-  console.log('piece', piece);
-
   if(!piece) {
     return false;
   }
@@ -160,7 +155,6 @@ async function emitState(room) {
 }
 
 function disconnect(socket) {
-  console.log('disconnected: ',socket.id);
   return () => {
     io.emit('rooms', getRooms());
   }
@@ -202,12 +196,10 @@ GameNS.adapter.on("delete-room ", room => {
 });
 
 GameNS.adapter.on("join-room", (room, id) => {
-  console.log('join room:', room);
   emitState(room);
 });
 
 GameNS.adapter.on("leave-room", (room, id) => {
-  console.log('leave room:', room);
   emitState(room);
 });
 
