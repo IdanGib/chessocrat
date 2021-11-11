@@ -45,12 +45,17 @@ function calcMove(players) {
   return win && JSON.parse(win);
 }
 
-function isPromotionMove({ move }) {
+function isPromotionMove(move, chess) {
+  console.log('isPromotionMove', move);
   const { from, to } = move || {};
   if(!from || !to) {
     return false;
   }
+  console.log('from:', from);
+
   const piece = chess.get(from);
+  console.log('piece', piece);
+
   if(!piece) {
     return false;
   }
@@ -58,8 +63,9 @@ function isPromotionMove({ move }) {
   if(type !== chess.PAWN) {
     return false;
   }
-  return  color === chess.WHITE && to.endsWith('1') || 
-          color === chess.BLACK && to.endsWith('8');
+  const black = color === chess.BLACK && to.endsWith('1');
+  const white =  color === chess.WHITE && to.endsWith('8');
+  return black || white;
 }
 
 function calcSelectedPromotion(players) {
@@ -123,10 +129,9 @@ async function gameState(room) {
   let promotion = false;
   
   if(move) {
-    if(!selectedPromotion) {
-      promotion = isPromotionMove({ turn, move });
-    }
+    promotion = !selectedPromotion && isPromotionMove(move, chess);
     chess.move({ ...move, promotion: selectedPromotion });
+
   }
 
   const over = chess.game_over() ? (
@@ -143,7 +148,9 @@ async function gameState(room) {
     fen: chess.fen(),
     size,
     players,
-    promotion
+    promotion,
+    png: chess.pgn(),
+    ascii: chess.ascii()
   };
 }
 
