@@ -83,9 +83,16 @@
     const votesContainerEl = $('#votes_container');
 
 
-    share.on('click', event => {
+    share.on('click', async event => {
         if(navigator.share) {
-            navigator.share(location.href);
+            try {
+                await navigator.share({ url: location.href });
+            } catch(e) {
+                console.log(e.message)
+            }
+          
+        } else {
+            alert('no share option');
         }
     });
 
