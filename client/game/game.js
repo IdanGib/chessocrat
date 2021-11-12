@@ -73,7 +73,7 @@
        pieceTheme: "chesspieces/{piece}.png"
     }); 
 
-    const share = $("#share");
+    const invite = $("#invite");
     const sizeEl = $('#size');
     const board = $('#board');
     const pillMsgEl = $('#pill-msg');
@@ -83,7 +83,7 @@
     const votesContainerEl = $('#votes_container');
 
 
-    share.on('click', async event => {
+    invite.on('click', async event => {
         if(navigator.share) {
             try {
                 await navigator.share({ url: location.href });
