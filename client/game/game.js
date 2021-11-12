@@ -73,6 +73,7 @@
        pieceTheme: "chesspieces/{piece}.png"
     }); 
 
+    const share = $("#share");
     const sizeEl = $('#size');
     const board = $('#board');
     const pillMsgEl = $('#pill-msg');
@@ -80,6 +81,13 @@
     const turnEl = $('#turn');
     const mymove = $('#mymove');
     const votesContainerEl = $('#votes_container');
+
+
+    share.on('click', event => {
+        if(navigator.share) {
+            navigator.share(location.href);
+        }
+    });
 
     const selected = [];
 
