@@ -21,7 +21,7 @@
                     <h5 class="card-title"></h5>
                     <p class="card-text"></p>
                     <a href="/game/game.html?game=${r}" target="_blank" class="card-link btn btn-outline-dark">Enter</a>
-                    <a href="/game/watch.html?game=${r}" target="_blank" class="card-link btn btn-outline-primary">Watch</a>
+                    <a href="/watch.html?game=${r}" target="_blank" class="card-link btn btn-outline-primary">Watch</a>
                 </div>
             </div>
             `);
