@@ -8,14 +8,8 @@
     socket.on('rooms', (rooms) => {
         roomsEl.html('');
         for(const r of rooms) {
-            // const li = $('<li></li>');
-            // li.html(`<a 
-            //     class="game-card text-white bg-dark"
-            //     href="/game/game.html?game=${r}"
-            //     target="_blank">${r}</a>
-            //     `)
             const card = $(`
-            <div class="card text-dark bg-light mb-3 mx-auto" style="max-width: 18rem;">
+            <div class="card text-dark bg-light m-3" style="max-width: 18rem;">
                 <div class="card-header">${r}</div>
                 <div class="card-body">
                     <h5 class="card-title">Light card title</h5>
