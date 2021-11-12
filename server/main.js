@@ -15,8 +15,6 @@ const games = {};
 app.use(cors());
 app.use(express.static(resolve(__dirname, '..', 'client')))
 
-//const PROMOTION_FEN = "rnbqkbnr/pPppppp1/8/8/8/8/1PPPPPpP/RNBQKBNR w KQkq - 0 5";
-
 const GameNS = io.of(ROOM_SPACE);
 
 function calcMove(players) {
@@ -160,10 +158,17 @@ function disconnect(socket) {
   }
 }
 
- function getRooms() {
+async function getRoomInfo(room) {
+  const sockets = await GameNS.in(room).fetchSockets();
+  return sockets.map(s => s.data);
+}
+
+
+function getRooms() {
   const rooms = Array.from(GameNS.adapter.rooms.keys());
   const sids = Array.from(GameNS.sockets.keys());
-  return _.difference(rooms, sids);
+  const roomsNames =  _.difference(rooms, sids);
+  return roomsNames;
 }
 
 function joinUser(socket) {
@@ -221,6 +226,17 @@ GameNS.on("connection", socket => {
 io.on('connection', (socket) => {
   socket.on('disconnect', disconnect(socket));
   socket.emit('rooms', getRooms());
+});
+
+app.get('/rooms/info/:room?', async (req, res) => {
+  const { room: name } = req.params;
+  const rooms = name ? [ name ] : getRooms();
+  const result = [];
+  for(const room of rooms) {
+    const info = await getRoomInfo(room);
+    result.push({ room, info })
+  }
+  return res.json(result);
 });
 
 server.listen(PORT, () => {
