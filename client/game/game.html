@@ -21,15 +21,20 @@
    <nav class="navbar navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">Chessocrat</a>
-      <div class="navbar-brand">
-          <button class="mx-4 btn btn-outline-dark" id="invite">
-            Invite
-            <i class="bi bi-person-plus ms-1"></i>
-          </button>
-        
-          <span id="game"></span>
-          <span id="size" class="badge rounded-pill bg-secondary">0</span>
+      <div class="navbar-item text-center">
+           
+            <span class="badge font-sm px-2 rounded-pill bg-dark">
+              <span id="size">0</span> Players</span>
+            </span>
+
+             <span id="game" class="mx-2 text-dark"></span>
       </div>
+      
+      <button class="mx-4 btn btn-outline-dark" id="invite">
+        Invite
+        <i class="bi bi-person-plus ms-1"></i>
+      </button>
+
     </div>
 
          <div class="offcanvas offcanvas-end" tabindex="-1" 
@@ -56,7 +61,7 @@
 
   </nav>
    
-    <div class="container-fluid position-relative">
+    <div class="container-fluid px-0 position-relative">
             <div class="container m-auto rows game-container">
                 <div class="my-2 row">
                         <div class="col text-start">
