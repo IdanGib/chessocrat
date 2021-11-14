@@ -1,6 +1,13 @@
+const { config } = require('dotenv');
+config();
+// const { CLOCK_MIN, VOTE_TIME_SEC } = process.env;
+// https://albert-gonzalez.github.io/easytimer.js/
+// const clock = Number(CLOCK_MIN);
+// const vote_time = Number(VOTE_TIME_SEC);
+
+const { Timer } = require("easytimer.js");
 const _ = require('lodash');
 const { Chess } = require('chess.js');
-const chess = new Chess();
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -96,8 +103,8 @@ function cleanPromotions(players) {
   }
 }
 async function gameState(room) {
-  const chess = games[room];
-  if(!chess) {
+  const {chess, time } = games[room];
+  if(!chess || !time) {
     return {};
   }
 
@@ -110,6 +117,8 @@ async function gameState(room) {
       players.push(s.data);
     }
   }
+
+
 
   const currentPlayers = players.filter(p => p.side === turn);
   const prevPlayers = players.filter(p => p.side !== turn);
@@ -134,6 +143,7 @@ async function gameState(room) {
     chess.insufficient_material() && 'insufficient material' ||
     chess.in_threefold_repetition() && "threefold repetition"
   ) : '';
+  
   return {
     turn: chess.turn(),
     over,
@@ -191,7 +201,14 @@ function joinUser(socket) {
 
 GameNS.adapter.on("create-room", room => {
   const chess = new Chess();
-  games[room] = chess;
+  
+  // const timer = new Timer({ 
+  //   countdown: true, 
+  //   startValues: { minutes: clock } 
+  // });
+
+  games[room] = { chess };
+
   io.emit('rooms', getRooms());
 });
 
