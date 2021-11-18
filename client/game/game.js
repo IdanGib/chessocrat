@@ -1,3 +1,4 @@
+
 (async () => {
 
     const url = new URL(`${location.href}`); 
@@ -67,7 +68,7 @@
     const votes_info = $('#votes_info');
 
     const ROOM_SPACE = "/games";
-    const socket = io(ROOM_SPACE);
+    const socket = io(`${ROOM_SPACE}`);
 
     const chess = Chessboard('board', {
        pieceTheme: "chesspieces/{piece}.png"
@@ -80,6 +81,7 @@
     const move = $('#move');
     const turnEl = $('#turn');
     const mymove = $('#mymove');
+    const timer = $('#timer');
     const votesContainerEl = $('#votes_container');
 
 
@@ -205,10 +207,10 @@
         votes_info.text(votesInfoMsge);
     }
 
-    socket.on('time', data => {
-        console.log(data);
+    socket.on('timer', data => {
+        timer.text(data);
     });
-    
+
     socket.on('timeout', data => {
         console.log('timeout!');
     });
@@ -221,8 +223,9 @@
         fen,
         size,
         promotion
-    }) => {     
-        const me = players.find(p => p.id === socket.id);
+    }) => {    
+        
+        const me = players?.find(p => p.id === socket.id);
 
         if(!me) {
             return;
