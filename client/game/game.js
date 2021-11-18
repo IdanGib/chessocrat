@@ -205,6 +205,14 @@
         votes_info.text(votesInfoMsge);
     }
 
+    socket.on('time', data => {
+        console.log(data);
+    });
+    
+    socket.on('timeout', data => {
+        console.log('timeout!');
+    });
+
     socket.on('state', async ({ 
         players,
         turn, 
